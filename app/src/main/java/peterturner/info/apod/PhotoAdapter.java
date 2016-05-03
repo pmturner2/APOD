@@ -10,7 +10,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.impl.cookie.DateUtils;
 
 /**
  * Created by pturner on 4/30/16.
@@ -37,7 +40,11 @@ public class PhotoAdapter extends ArrayAdapter<Photo> {
         tvTitle.setText(photo.title);
 
         TextView tvDate = (TextView) convertView.findViewById(R.id.tvDate);
-        tvDate.setText(photo.date.toString());
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+        tvDate.setText(format.format(photo.date));
+
+        TextView tvExplanation = (TextView) convertView.findViewById(R.id.tvExplanation);
+        tvExplanation.setText(photo.explanation);
 
         ImageView ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
         // Clear image until async image loaded.
