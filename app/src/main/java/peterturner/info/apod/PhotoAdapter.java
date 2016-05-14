@@ -19,6 +19,14 @@ import cz.msebera.android.httpclient.impl.cookie.DateUtils;
  * Created by pturner on 4/30/16.
  */
 public class PhotoAdapter extends ArrayAdapter<Photo> {
+    private SimpleDateFormat mDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+    public static class ViewHolder {
+        public TextView tvTitle;
+        public TextView tvDate;
+        public TextView tvExplanation;
+        public ImageView ivPhoto;
+    }
+
     public PhotoAdapter(Context context, ArrayList<Photo> photos) {
         super(context, 0, photos);
     }
@@ -28,28 +36,26 @@ public class PhotoAdapter extends ArrayAdapter<Photo> {
         // Get data item for position
         Photo photo = getItem(position);
 
+        ViewHolder viewHolder;
         // Check if recycled view
         if (convertView != null) {
-
+            viewHolder = (ViewHolder) convertView.getTag();
         } else {
             // no recycled view, create a new view
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_photo, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
+            viewHolder.tvDate = (TextView) convertView.findViewById(R.id.tvDate);
+            viewHolder.tvExplanation = (TextView) convertView.findViewById(R.id.tvExplanation);
+            viewHolder.ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
+            convertView.setTag(viewHolder);
         }
 
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
-        tvTitle.setText(photo.title);
-
-        TextView tvDate = (TextView) convertView.findViewById(R.id.tvDate);
-        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
-        tvDate.setText(format.format(photo.date));
-
-        TextView tvExplanation = (TextView) convertView.findViewById(R.id.tvExplanation);
-        tvExplanation.setText(photo.explanation);
-
-        ImageView ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
-        // Clear image until async image loaded.
-        ivPhoto.setImageResource(0);
-        Picasso.with(getContext()).load(photo.url).into(ivPhoto);
+        viewHolder.tvTitle.setText(photo.title);
+        viewHolder.tvDate.setText(mDateFormat.format(photo.date));
+        viewHolder.tvExplanation.setText(photo.explanation);
+        viewHolder.ivPhoto.setImageResource(0);
+        Picasso.with(getContext()).load(photo.url).into(viewHolder.ivPhoto);
 
         // Return converted View.
         return convertView;
